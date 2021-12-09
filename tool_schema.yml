@@ -1,0 +1,30 @@
+name: 'Fibonacci'
+author: 'Loren Bruns Jr'
+description: 'A Fibonacci sequence generator written in Spring Boot for no particularly good reason.'
+inputs:
+  - name: 'sequence_f0'
+    title: 'F0'
+    description: 'The first value in the sequence to be built.'
+    type: 'integer'
+    method: 'environment_variable'
+    env_var_name: 'SPRING_SEQUENCE_F0'
+    required: true
+  - name: 'sequence_f1'
+    title: 'F1'
+    description: 'The second value in the sequence to be built.'
+    type: 'integer'
+    method: 'environment_variable'
+    env_var_name: 'SPRING_SEQUENCE_F1'
+    required: true
+  - name: 'sequence_length'
+    title: 'Length'
+    description: 'The length of the sequence to build. (Note: must be >= 2)'
+    type: 'integer'
+    method: 'environment_variable'
+    env_var_name: 'SPRING_SEQUENCE_LENGTH'
+    required: true
+outputs:
+  - name: 'sequence_result'
+    type: 'JSON'
+    method: 'filesystem'
+    expected_path: './data/outputs/sequence.json'

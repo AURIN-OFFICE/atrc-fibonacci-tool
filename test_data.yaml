@@ -1,4 +1,10 @@
 inputs:
-  f0: 2
-  f1: 3
-  length: 10
+  f0: 
+    type: value
+    value: 2
+  f1:
+    type: value
+    value: 3
+  length:
+    type: value
+    value: 10

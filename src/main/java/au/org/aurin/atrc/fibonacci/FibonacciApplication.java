@@ -34,10 +34,9 @@ public class FibonacciApplication implements CommandLineRunner {
 		System.out.println("Using the following input parameters: " + inputs);
 		System.out.println("Creating Fibonacci sequence...");
 		final var sequence = createSequence(
-				inputs.f0,
-				inputs.f1,
-				inputs.length
-		);
+				inputs.f0.value,
+				inputs.f1.value,
+				inputs.length.value);
 
 		System.out.println("The following sequence was calculated: " + sequence);
 		System.out.println("Writing sequence to specified file: " + inputs.outputPath);
@@ -48,13 +47,23 @@ public class FibonacciApplication implements CommandLineRunner {
 		System.out.println("Finished work.");
 	}
 
+	public record InputsLong(
+			@NonNull Long value,
+			@NonNull String type) {
+	}
+
+	public record InputsInteger(
+			@NonNull Integer value,
+			@NonNull String type) {
+	}
+
 	@ConfigurationProperties(prefix = "inputs")
 	public record Inputs(
-			@NonNull Long f0,
-			@NonNull Long f1,
-			@Min(2) @NonNull Integer length,
-			@NonNull String outputPath
-	) {}
+			@NonNull InputsLong f0,
+			@NonNull InputsLong f1,
+			@NonNull InputsInteger length,
+			@NonNull String outputPath) {
+	}
 
 	private static List<Long> createSequence(final Long f0, final long f1, final int length) {
 		Assert.isTrue(length >= 2, "length must be >= 2");
@@ -65,7 +74,7 @@ public class FibonacciApplication implements CommandLineRunner {
 
 		var a = f0;
 		var b = f1;
-		for (var i = 2; i <=length; i++) {
+		for (var i = 2; i <= length; i++) {
 			final var c = calculateNext(a, b);
 
 			sequence.add(c);

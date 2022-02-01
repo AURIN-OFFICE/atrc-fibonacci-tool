@@ -1,17 +1,17 @@
 {
   "properties": [
     {
-      "name": "inputs.f0",
+      "name": "inputs.f0.value",
       "type": "java.lang.Long",
       "description": "The first value in the sequence to be built."
     },
     {
-      "name": "inputs.f1",
+      "name": "inputs.f1.value",
       "type": "java.lang.Long",
       "description": "The second value in the sequence to be built."
     },
     {
-      "name": "inputs.length",
+      "name": "inputs.length.value",
       "type": "java.lang.Integer",
       "description": "The length of the sequence to build. (Note: must be >= 2)."
     },
@@ -20,4 +20,5 @@
       "type": "java.lang.String",
       "description": "Output path for the JSON containing the sequence."
     }
-  ] }
+  ]
+}

@@ -1,92 +1,80 @@
 package au.org.aurin.atrc.fibonacci;
 
-import au.org.aurin.atrc.fibonacci.FibonacciApplication.Inputs;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.util.Assert;
 
-import javax.validation.constraints.Min;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@EnableConfigurationProperties(Inputs.class)
 @RequiredArgsConstructor
 public class FibonacciApplication implements CommandLineRunner {
-	@NonNull
-	private final Inputs inputs;
+    @Value("${inputs.f0.value:0}")
+    private Long f0;
 
-	public static void main(String[] args) {
-		SpringApplication.run(FibonacciApplication.class, args);
-	}
+    @Value("${inputs.f1.value:1}")
+    private Long f1;
 
-	@Override
-	public void run(String... args) throws IOException {
-		System.out.println("Using the following input parameters: " + inputs);
-		System.out.println("Creating Fibonacci sequence...");
-		final var sequence = createSequence(
-				inputs.f0.value,
-				inputs.f1.value,
-				inputs.length.value);
+    @Value("${inputs.length.value:10}")
+    private Integer length;
 
-		System.out.println("The following sequence was calculated: " + sequence);
-		System.out.println("Writing sequence to specified file: " + inputs.outputPath);
+    @Value("${inputs.outputPath.value:/data/outputs/sequence.json}")
+    private String outputPath;
 
-		final var objectMapper = new ObjectMapper();
-		objectMapper.writeValue(new File(inputs.outputPath), sequence);
+    public static void main(String[] args) {
+        SpringApplication.run(FibonacciApplication.class, args);
+    }
 
-		System.out.println("Finished work.");
-	}
+    private static List<Long> createSequence(final Long f0, final long f1, final int length) {
+        Assert.isTrue(length >= 2, "length must be >= 2");
 
-	public record InputsLong(
-			@NonNull Long value,
-			@NonNull String type) {
-	}
+        final var sequence = new ArrayList<Long>(length);
+        sequence.add(f0);
+        sequence.add(f1);
 
-	public record InputsInteger(
-			@NonNull Integer value,
-			@NonNull String type) {
-	}
+        var a = f0;
+        var b = f1;
+        for (var i = 2; i <= length; i++) {
+            final var c = calculateNext(a, b);
 
-	@ConfigurationProperties(prefix = "inputs")
-	public record Inputs(
-			@NonNull InputsLong f0,
-			@NonNull InputsLong f1,
-			@NonNull InputsInteger length,
-			@NonNull String outputPath) {
-	}
+            sequence.add(c);
 
-	private static List<Long> createSequence(final Long f0, final long f1, final int length) {
-		Assert.isTrue(length >= 2, "length must be >= 2");
+            a = b;
+            b = c;
+        }
 
-		final var sequence = new ArrayList<Long>(length);
-		sequence.add(f0);
-		sequence.add(f1);
+        return sequence;
+    }
 
-		var a = f0;
-		var b = f1;
-		for (var i = 2; i <= length; i++) {
-			final var c = calculateNext(a, b);
+    private static long calculateNext(final long f0, final long f1) {
+        return f0 + f1;
+    }
 
-			sequence.add(c);
+    @Override
+    public void run(String... args) throws IOException {
+        Assert.notNull(f0, "f0 must not be null");
+        Assert.notNull(f1, "f1 must not be null");
+        Assert.notNull(length, "length must not be null");
+        Assert.isTrue(length >= 2, "length must be >= 2");
+        Assert.hasText(outputPath, "outputPath must contain text");
 
-			a = b;
-			b = c;
-		}
+        System.out.printf("Using the following input parameters: f0=%d, f1=%d, length=%d, outputPath=%s%n", f0, f1, length, outputPath);
+        System.out.println("Creating Fibonacci sequence...");
+        final var sequence = createSequence(f0, f1, length);
 
-		return sequence;
-	}
+        System.out.println("The following sequence was calculated: " + sequence);
+        System.out.println("Writing sequence to specified file: " + outputPath);
 
-	private static long calculateNext(final long f0, final long f1) {
-		return f0 + f1;
-	}
+        final var objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File(outputPath), sequence);
+
+        System.out.println("Finished work.");
+    }
 }

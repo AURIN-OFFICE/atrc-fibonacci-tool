@@ -8,3 +8,6 @@ inputs:
   length:
     type: value
     value: 10
+  outputPath:
+    type: path
+    value: /data/outputs/sequence.json

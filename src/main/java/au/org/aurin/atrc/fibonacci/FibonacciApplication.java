@@ -59,6 +59,12 @@ public class FibonacciApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
+        Assert.notNull(f0, "f0 must not be null");
+        Assert.notNull(f1, "f1 must not be null");
+        Assert.notNull(length, "length must not be null");
+        Assert.isTrue(length >= 2, "length must be >= 2");
+        Assert.hasText(outputPath, "outputPath must contain text");
+
         System.out.printf("Using the following input parameters: f0=%d, f1=%d, length=%d, outputPath=%s%n", f0, f1, length, outputPath);
         System.out.println("Creating Fibonacci sequence...");
         final var sequence = createSequence(f0, f1, length);

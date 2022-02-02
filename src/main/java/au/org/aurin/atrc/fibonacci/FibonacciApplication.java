@@ -1,14 +1,11 @@
 package au.org.aurin.atrc.fibonacci;
 
-import au.org.aurin.atrc.fibonacci.FibonacciApplication.Inputs;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.util.Assert;
 
 import java.io.File;
@@ -17,11 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@EnableConfigurationProperties(Inputs.class)
 @RequiredArgsConstructor
 public class FibonacciApplication implements CommandLineRunner {
-    @NonNull
-    private final Inputs inputs;
+    @Value("${inputs.f0.value:0}")
+    private Long f0;
+
+    @Value("${inputs.f1.value:1}")
+    private Long f1;
+
+    @Value("${inputs.length.value:10}")
+    private Integer length;
+
+    @Value("${inputs.outputPath.value:/data/outputs/sequence.json}")
+    private String outputPath;
 
     public static void main(String[] args) {
         SpringApplication.run(FibonacciApplication.class, args);
@@ -54,37 +59,16 @@ public class FibonacciApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
-        System.out.println("Using the following input parameters: " + inputs);
+        System.out.printf("Using the following input parameters: f0=%d, f1=%d, length=%d, outputPath=%s%n", f0, f1, length, outputPath);
         System.out.println("Creating Fibonacci sequence...");
-        final var sequence = createSequence(
-                inputs.f0.value,
-                inputs.f1.value,
-                inputs.length.value);
+        final var sequence = createSequence(f0, f1, length);
 
         System.out.println("The following sequence was calculated: " + sequence);
-        System.out.println("Writing sequence to specified file: " + inputs.outputPath);
+        System.out.println("Writing sequence to specified file: " + outputPath);
 
         final var objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File(inputs.outputPath), sequence);
+        objectMapper.writeValue(new File(outputPath), sequence);
 
         System.out.println("Finished work.");
-    }
-
-    public record InputsLong(
-            @NonNull Long value,
-            @NonNull String type) {
-    }
-
-    public record InputsInteger(
-            @NonNull Integer value,
-            @NonNull String type) {
-    }
-
-    @ConfigurationProperties(prefix = "inputs")
-    public record Inputs(
-            @NonNull InputsLong f0,
-            @NonNull InputsLong f1,
-            @NonNull InputsInteger length,
-            @NonNull String outputPath) {
     }
 }

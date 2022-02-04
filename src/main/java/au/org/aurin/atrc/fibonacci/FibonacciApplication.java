@@ -25,7 +25,7 @@ public class FibonacciApplication implements CommandLineRunner {
     @Value("${inputs.length.value:10}")
     private Integer length;
 
-    @Value("${inputs.outputPath.value:/data/outputs/sequence.json}")
+    @Value("${outputs.sequence.path:sequence.json}")
     private String outputPath;
 
     public static void main(String[] args) {
@@ -65,7 +65,8 @@ public class FibonacciApplication implements CommandLineRunner {
         Assert.isTrue(length >= 2, "length must be >= 2");
         Assert.hasText(outputPath, "outputPath must contain text");
 
-        System.out.printf("Using the following input parameters: f0=%d, f1=%d, length=%d, outputPath=%s%n", f0, f1, length, outputPath);
+        System.out.printf("Using the following input parameters: f0=%d, f1=%d, length=%d, outputPath=%s%n", f0, f1,
+                length, outputPath);
         System.out.println("Creating Fibonacci sequence...");
         final var sequence = createSequence(f0, f1, length);
 

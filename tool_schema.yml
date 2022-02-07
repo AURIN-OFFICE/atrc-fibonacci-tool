@@ -28,7 +28,6 @@ spec:
       env_var_name: 'SPRING_SEQUENCE_LENGTH'
       required: true
   outputs:
-    - name: 'sequence_result'
+    - name: 'result_sequence'
       type: 'JSON'
-      method: 'filesystem'
-      expected_path: './data/outputs/sequence.json'
+      filename: 'sequence.json'

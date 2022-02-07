@@ -25,7 +25,7 @@ public class FibonacciApplication implements CommandLineRunner {
     @Value("${inputs.length.value:10}")
     private Integer length;
 
-    @Value("${outputs.sequence.path:sequence.json}")
+    @Value("${outputs.result_sequence.path:sequence.json}")
     private String outputPath;
 
     public static void main(String[] args) {

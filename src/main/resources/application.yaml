@@ -1,3 +1,3 @@
 spring:
   config:
-    import: "optional:file:/data/parameters.yaml"
+    import: "optional:file:/atrc_data/parameters.yaml"

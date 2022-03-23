@@ -11,4 +11,4 @@ inputs:
 outputs:
   result_sequence:
     type: path
-    path: /data/outputs/sequence.json
+    path: /atrc_data/outputs/sequence.json

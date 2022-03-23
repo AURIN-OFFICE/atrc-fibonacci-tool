@@ -14,11 +14,11 @@ RUN java -Djarmode=layertools -jar application.jar extract
 ####
 FROM adoptopenjdk:16-jre-hotspot
 
-RUN mkdir -p /data/metadata && \
-    mkdir -p /data/inputs && \
-    mkdir -p /data/outputs
+RUN mkdir -p /atrc_data/metadata && \
+    mkdir -p /atrc_data/inputs && \
+    mkdir -p /atrc_data/outputs
 
-COPY tool_schema.yml /data/metadata
+COPY tool_schema.yml /atrc_data/metadata
 
 WORKDIR application
 
